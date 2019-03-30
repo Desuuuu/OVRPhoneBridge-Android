@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/connection">
+
+        <EditTextPreference
+            android:title="@string/server_address"
+            android:key="server_address"
+            android:singleLine="true"
+            android:maxLength="255" />
+
+        <EditTextPreference
+            android:title="@string/server_port"
+            android:key="server_port"
+            android:singleLine="true"
+            android:maxLength="5" />
+
+        <EditTextPreference
+            android:title="@string/encryption_password"
+            android:key="encryption_password"
+            android:singleLine="true"
+            android:maxLength="32" />
+
+        <SwitchPreference
+            android:title="@string/retry_forever"
+            android:key="retry_forever" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/feature_notifications">
+
+        <SwitchPreference
+            android:title="@string/enable"
+            android:key="feature_notifications" />
+
+        <Preference
+            android:key="notifications_filters"
+            android:title="@string/filters"
+            android:summary="@string/filters_summary">
+
+            <intent
+                android:targetPackage="com.desuuuu.ovrphonebridge"
+                android:targetClass="com.desuuuu.ovrphonebridge.settings.FiltersActivity"/>
+
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/feature_sms">
+
+        <SwitchPreference
+            android:title="@string/enable"
+            android:key="feature_sms" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/miscellaneous">
+
+        <EditTextPreference
+            android:title="@string/device_name"
+            android:key="device_name"
+            android:singleLine="true"
+            android:maxLength="32" />
+
+        <Preference
+            android:key="version"
+            android:title="@string/version" />
+
+        <Preference
+            android:key="feedback"
+            android:title="@string/feedback"
+            android:summary="@string/feedback_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

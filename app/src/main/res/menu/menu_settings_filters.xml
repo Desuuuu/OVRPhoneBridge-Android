@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.desuuuu.ovrphonebridge.MainActivity">
+    <item
+        android:id="@+id/applications_show_system"
+        android:title="@string/applications_show_system"
+        android:checkable="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/applications_reset"
+        android:title="@string/reset"
+        app:showAsAction="never" />
+</menu>
