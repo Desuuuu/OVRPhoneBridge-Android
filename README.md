@@ -1,6 +1,6 @@
 # OVRPhoneBridge-Android
 
-Official Android client for OVRPhoneBridge.
+Official Android client for [OVRPhoneBridge](https://github.com/Desuuuu/OVRPhoneBridge).
 
 ## Screenshots
 <img src="/screenshots/main.png" width="300" /> <img src="/screenshots/settings.png" width="300" />
