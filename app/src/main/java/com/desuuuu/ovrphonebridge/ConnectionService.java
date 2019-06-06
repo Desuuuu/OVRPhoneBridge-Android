@@ -496,6 +496,11 @@ public class ConnectionService extends Service {
             return;
         }
 
+        if (!mHandshakeDone) {
+            onSocketHandshakeFail(getString(R.string.handshake_failed));
+            return;
+        }
+
         Log.d(TAG, "Socket disconnected");
 
         if (e != null) {
