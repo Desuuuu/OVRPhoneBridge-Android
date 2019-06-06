@@ -5,6 +5,7 @@ import android.util.Base64;
 
 import org.libsodium.jni.NaCl;
 import org.libsodium.jni.Sodium;
+import org.libsodium.jni.encoders.Encoder;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -109,6 +110,83 @@ public class Crypto {
         decrypted.get(result);
 
         return new String(result, StandardCharsets.UTF_8);
+    }
+
+    static byte[] getServerPublicKey(String publicKeyHex, String secretKeyHex, String data) throws Exception {
+        NaCl.sodium();
+
+        byte[] encrypted = Encoder.HEX.decode(data);
+
+        ByteBuffer decrypted = ByteBuffer.allocate(
+                encrypted.length - Sodium.crypto_box_sealbytes()).order(ByteOrder.BIG_ENDIAN);
+
+        if (Sodium.crypto_box_seal_open(
+                decrypted.array(),
+                encrypted,
+                encrypted.length,
+                Encoder.HEX.decode(publicKeyHex),
+                Encoder.HEX.decode(secretKeyHex)) != 0) {
+            throw new Exception("Invalid message");
+        }
+
+        long timestamp = decrypted.getLong();
+        long currentTime = getCurrentTime();
+
+        if (timestamp > currentTime + Constants.TIMESTAMP_LEEWAY
+                || timestamp < currentTime - Constants.TIMESTAMP_LEEWAY) {
+            throw new Exception("Expired server public key");
+        }
+
+        byte[] serverPublicKey = new byte[decrypted.remaining()];
+
+        decrypted.get(serverPublicKey);
+
+        return serverPublicKey;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    static boolean generateKeyPair(SharedPreferences sharedPreferences) {
+        NaCl.sodium();
+
+        byte[] publicKey = new byte[32];
+        byte[] secretKey = new byte[32];
+
+        Sodium.crypto_kx_keypair(publicKey, secretKey);
+
+        return sharedPreferences.edit()
+                .putString("public_key", Encoder.HEX.encode(publicKey))
+                .putString("secret_key", Encoder.HEX.encode(secretKey))
+                .putString("identifier", getIdentifier(publicKey))
+                .commit();
+    }
+
+    private static String getIdentifier(byte[] publicKey) {
+        NaCl.sodium();
+
+        byte[] key = {
+            (byte)0x32, (byte)0x65, (byte)0x40, (byte)0x4d, (byte)0x1d, (byte)0x30, (byte)0x66, (byte)0x34,
+            (byte)0x29, (byte)0x90, (byte)0xb8, (byte)0x91, (byte)0x8a, (byte)0x8f, (byte)0x5b, (byte)0xa1
+        };
+
+        byte[] shortHash = new byte[Sodium.crypto_shorthash_bytes()];
+
+        Sodium.crypto_shorthash(shortHash, publicKey, publicKey.length, key);
+
+        StringBuilder identifier = new StringBuilder(Encoder.HEX.encode(shortHash));
+
+        if (identifier.length() % 2 != 0) {
+            identifier.insert(0, '0');
+        }
+
+        int i = identifier.length() - 2;
+
+        while (i > 0) {
+            identifier.insert(i, ':');
+
+            i -= 2;
+        }
+
+        return "[" + identifier.toString().toUpperCase() + "]";
     }
 
     private static long getCurrentTime() {
