@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.desuuuu.ovrphonebridge.BuildConfig;
 import com.desuuuu.ovrphonebridge.Constants;
-import com.desuuuu.ovrphonebridge.Crypto;
 import com.desuuuu.ovrphonebridge.MainActivity;
 import com.desuuuu.ovrphonebridge.R;
 import com.google.common.net.InetAddresses;
@@ -117,58 +116,6 @@ public class MainFragment extends PreferenceFragmentCompat {
             }
 
             return true;
-        });
-
-        EditTextPreference encryptionPassword = Objects.requireNonNull(findPreference("encryption_password"));
-
-        encryptionPassword.setPersistent(false);
-
-        encryptionPassword.setOnBindEditTextListener(editText -> {
-            editText.setInputType(InputType.TYPE_CLASS_TEXT
-                    | InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-
-            editText.getText().clear();
-        });
-
-        encryptionPassword.setSummaryProvider((Preference.SummaryProvider<EditTextPreference>) preference -> {
-            String text = preference.getText();
-
-            if (TextUtils.isEmpty(text)) {
-                return getString(R.string.summary_not_set);
-            }
-
-            return "\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF\u25CF";
-        });
-
-        encryptionPassword.setOnPreferenceChangeListener((preference, newValue) -> {
-            String strVal = newValue.toString();
-
-            if (TextUtils.isEmpty(strVal)) {
-                return mSharedPreferences.edit().putString(preference.getKey(), null).commit();
-            }
-
-            String passwordHash;
-
-            try {
-                passwordHash = Crypto.derivePassword(strVal);
-            } catch (Crypto.PasswordTooShortException e) {
-                Toast.makeText(
-                        getContext(),
-                        getResources().getQuantityString(R.plurals.encryption_password_too_short, e.getMinLength(), e.getMinLength()),
-                        Toast.LENGTH_LONG).show();
-                return false;
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                Toast.makeText(
-                        getContext(),
-                        getString(R.string.encryption_failed),
-                        Toast.LENGTH_LONG).show();
-                return false;
-            }
-
-            return mSharedPreferences.edit().putString(preference.getKey(), passwordHash).commit();
         });
 
         SwitchPreference retryForever = Objects.requireNonNull(findPreference("retry_forever"));

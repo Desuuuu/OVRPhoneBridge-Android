@@ -612,12 +612,6 @@ public class ConnectionService extends Service {
             throw new Exception(getString(R.string.missing_server_port));
         }
 
-        String encryptionPassword = sharedPreferences.getString("encryption_password", null);
-
-        if (TextUtils.isEmpty(encryptionPassword)) {
-            throw new Exception(getString(R.string.missing_encryption_password));
-        }
-
         String deviceName = sharedPreferences.getString("device_name", MainActivity.getDeviceName());
 
         if (TextUtils.isEmpty(deviceName)) {

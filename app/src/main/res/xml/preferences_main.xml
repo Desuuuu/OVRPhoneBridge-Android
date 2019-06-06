@@ -17,12 +17,6 @@
             android:singleLine="true"
             android:maxLength="5" />
 
-        <EditTextPreference
-            android:title="@string/encryption_password"
-            android:key="encryption_password"
-            android:singleLine="true"
-            android:maxLength="32" />
-
         <SwitchPreference
             android:title="@string/retry_forever"
             android:key="retry_forever" />

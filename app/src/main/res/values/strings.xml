@@ -15,7 +15,6 @@
     <string name="connection">Connection</string>
     <string name="server_address">Server address</string>
     <string name="server_port">Server port</string>
-    <string name="encryption_password">Password</string>
     <string name="retry_forever">Retry indefinitely</string>
     <string name="enable">Enable</string>
     <string name="feature_notifications">Notifications</string>
@@ -34,20 +33,14 @@
     <string name="summary_not_set">Not set</string>
     <string name="missing_server_address">Missing server address</string>
     <string name="missing_server_port">Missing server port</string>
-    <string name="missing_encryption_password">Missing password</string>
     <string name="missing_device_name">Missing device name</string>
     <string name="invalid_server_address">Invalid server address</string>
     <string name="invalid_server_port">Invalid server port</string>
     <string name="invalid_device_name">Invalid device name</string>
-    <plurals name="encryption_password_too_short">
-        <item quantity="one">Please provide at least %1$d character</item>
-        <item quantity="other">Please provide at least %1$d characters</item>
-    </plurals>
     <string name="encryption_failed">Encryption failed</string>
     <string name="network_unavailable">No network available</string>
     <string name="handshake_failed">Handshake failed</string>
     <string name="handshake_timeout">Handshake timed out</string>
-    <string name="bad_encryption_password">Bad password</string>
     <string name="connection_failed">Connection failed</string>
     <string name="connection_failed_retry">Connection failed, retrying…</string>
     <string name="connection_lost_retry">Connection lost, retrying…</string>

@@ -3,8 +3,6 @@ package com.desuuuu.ovrphonebridge;
 public class Constants {
     public static final String PREFERENCES_NAME = "preferences";
     public static final String FEEDBACK_URL = "https://github.com/Desuuuu/OVRPhoneBridge-Android";
-    public static final int ENCRYPTION_PASSWORD_MIN_LENGTH = 6;
-    static final String ENCRYPTION_PASSWORD_SALT = "OVRPhoneBridge";
     static final long TIMESTAMP_LEEWAY = 300;
     static final int SOCKET_TIMEOUT = 20000;
     static final int MAX_RETRY = 15;

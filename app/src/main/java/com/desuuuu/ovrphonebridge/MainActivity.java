@@ -200,12 +200,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             throw new Exception(getString(R.string.missing_server_port));
         }
 
-        String encryptionPassword = mSharedPreferences.getString("encryption_password", null);
-
-        if (TextUtils.isEmpty(encryptionPassword)) {
-            throw new Exception(getString(R.string.missing_encryption_password));
-        }
-
         int port;
 
         try {

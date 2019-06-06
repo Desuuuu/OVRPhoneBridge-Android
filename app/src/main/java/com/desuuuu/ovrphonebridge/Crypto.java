@@ -111,71 +111,7 @@ public class Crypto {
         return new String(result, StandardCharsets.UTF_8);
     }
 
-    public static String derivePassword(String password) throws Exception {
-        NaCl.sodium();
-
-        if (TextUtils.isEmpty(password)
-                || password.length() < Constants.ENCRYPTION_PASSWORD_MIN_LENGTH) {
-            throw new PasswordTooShortException(Constants.ENCRYPTION_PASSWORD_MIN_LENGTH);
-        }
-
-        byte[] input = password.getBytes(StandardCharsets.UTF_8);
-
-        byte[] salt = new byte[16];
-
-        transformSalt(
-                salt,
-                salt.length,
-                Constants.ENCRYPTION_PASSWORD_SALT.getBytes(StandardCharsets.UTF_8),
-                Constants.ENCRYPTION_PASSWORD_SALT.length());
-
-        byte[] key = new byte[Sodium.crypto_aead_xchacha20poly1305_ietf_keybytes()];
-
-        if (Sodium.crypto_pwhash(
-                key,
-                key.length,
-                input,
-                input.length,
-                salt,
-                4,
-                67108864,
-                Sodium.crypto_pwhash_alg_argon2i13()) != 0) {
-            throw new Exception("Hashing failed");
-        }
-
-        return Base64.encodeToString(key, Base64.DEFAULT | Base64.NO_WRAP);
-    }
-
     private static long getCurrentTime() {
         return (System.currentTimeMillis() / 1000L);
-    }
-
-    private static void transformSalt(byte[] dest, int destLen, byte[] src, int srcLen) {
-        if (srcLen > 0) {
-            int i = 0;
-            int j = 0;
-
-            while (i < destLen) {
-                dest[i++] = src[j++];
-
-                if (j == srcLen) {
-                    j = 0;
-                }
-            }
-        }
-    }
-
-    public static class PasswordTooShortException extends Exception {
-        private int mMinLen;
-
-        PasswordTooShortException(int minLen) {
-            super("Password too short");
-
-            mMinLen = minLen;
-        }
-
-        public int getMinLength() {
-            return mMinLen;
-        }
     }
 }
