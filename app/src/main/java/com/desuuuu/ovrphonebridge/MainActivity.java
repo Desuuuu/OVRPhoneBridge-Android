@@ -52,6 +52,13 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         mSharedPreferences = getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE);
 
+        if (TextUtils.isEmpty(mSharedPreferences.getString("public_key", null))
+            || TextUtils.isEmpty(mSharedPreferences.getString("secret_key", null))) {
+            if (!Crypto.generateKeyPair(mSharedPreferences)) {
+                Toast.makeText(this, R.string.keypair_failed, Toast.LENGTH_SHORT).show();
+            }
+        }
+
         mServiceSwitch = findViewById(R.id.serviceSwitch);
         mServiceText = findViewById(R.id.serviceText);
 
@@ -216,6 +223,13 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         if (TextUtils.isEmpty(deviceName)) {
             throw new Exception(getString(R.string.missing_device_name));
+        }
+
+        if (TextUtils.isEmpty(mSharedPreferences.getString("public_key", null))
+            || TextUtils.isEmpty(mSharedPreferences.getString("secret_key", null))) {
+            if (!Crypto.generateKeyPair(mSharedPreferences)) {
+                throw new Exception(getString(R.string.keypair_failed));
+            }
         }
     }
 

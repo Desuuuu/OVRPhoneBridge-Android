@@ -27,6 +27,7 @@
     <string name="applications_list_empty">No application found</string>
     <string name="miscellaneous">Miscellaneous</string>
     <string name="device_name">Device name</string>
+    <string name="identifier">Identifier</string>
     <string name="version">Version</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_summary">Report technical issues or suggest new features</string>
@@ -37,7 +38,10 @@
     <string name="invalid_server_address">Invalid server address</string>
     <string name="invalid_server_port">Invalid server port</string>
     <string name="invalid_device_name">Invalid device name</string>
+    <string name="missing_public_key">Missing public key</string>
+    <string name="missing_secret_key">Missing secret key</string>
     <string name="encryption_failed">Encryption failed</string>
+    <string name="keypair_failed">Failed to generate key pair</string>
     <string name="network_unavailable">No network available</string>
     <string name="handshake_failed">Handshake failed</string>
     <string name="handshake_timeout">Handshake timed out</string>
