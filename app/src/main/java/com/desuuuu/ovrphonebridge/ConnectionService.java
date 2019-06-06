@@ -1497,8 +1497,12 @@ public class ConnectionService extends Service {
                             break;
                         }
 
+                        if (message.trim().length() < 1) {
+                            continue;
+                        }
+
                         if (!mStop) {
-                            mMainHandler.post(() -> onSocketMessage(message));
+                            mMainHandler.post(() -> onSocketMessage(message.trim()));
                         }
                     }
                 } catch (SocketException e) {
