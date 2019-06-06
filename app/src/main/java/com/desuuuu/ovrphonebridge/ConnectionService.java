@@ -535,7 +535,7 @@ public class ConnectionService extends Service {
 
                 e.printStackTrace();
             } else {
-                onSocketHandshakeFail(getString(R.string.bad_encryption_password));
+                onSocketHandshakeFail(getString(R.string.handshake_failed));
             }
             return;
         }
