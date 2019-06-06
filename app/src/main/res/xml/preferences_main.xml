@@ -59,6 +59,10 @@
             android:maxLength="32" />
 
         <Preference
+            android:key="identifier"
+            android:title="@string/identifier" />
+
+        <Preference
             android:key="version"
             android:title="@string/version" />
 

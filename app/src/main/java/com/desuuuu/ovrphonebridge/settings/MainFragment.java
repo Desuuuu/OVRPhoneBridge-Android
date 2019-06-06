@@ -203,6 +203,10 @@ public class MainFragment extends PreferenceFragmentCompat {
             return true;
         });
 
+        Preference identifier = Objects.requireNonNull(findPreference("identifier"));
+
+        identifier.setSummary(mSharedPreferences.getString("identifier", getString(R.string.summary_not_set)));
+
         Preference version = Objects.requireNonNull(findPreference("version"));
 
         version.setSummary(BuildConfig.VERSION_NAME);
