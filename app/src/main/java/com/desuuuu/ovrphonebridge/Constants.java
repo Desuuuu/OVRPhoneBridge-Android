@@ -3,7 +3,7 @@ package com.desuuuu.ovrphonebridge;
 public class Constants {
     public static final String PREFERENCES_NAME = "preferences";
     public static final String FEEDBACK_URL = "https://github.com/Desuuuu/OVRPhoneBridge-Android";
-    static final long TIMESTAMP_LEEWAY = 300;
+    static final long TIMESTAMP_LEEWAY = 180;
     static final int SOCKET_TIMEOUT = 20000;
     static final int MAX_RETRY = 15;
     static final int HANDSHAKE_TIMEOUT = 15000;
