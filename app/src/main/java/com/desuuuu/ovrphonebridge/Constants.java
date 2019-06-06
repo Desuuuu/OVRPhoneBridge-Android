@@ -6,7 +6,8 @@ public class Constants {
     static final long TIMESTAMP_LEEWAY = 180;
     static final int SOCKET_TIMEOUT = 20000;
     static final int MAX_RETRY = 15;
-    static final int HANDSHAKE_TIMEOUT = 15000;
+    static final int HANDSHAKE_PHASE1_TIMEOUT = 15000;
+    static final int HANDSHAKE_PHASE2_TIMEOUT = 120000;
     static final int SMS_LIST_MAX = 20;
     static final int SMS_PER_PAGE = 30;
 

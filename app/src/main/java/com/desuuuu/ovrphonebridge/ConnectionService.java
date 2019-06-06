@@ -338,6 +338,20 @@ public class ConnectionService extends Service {
         }
     }
 
+    private void handshakePhase1() {
+        mMainHandler.removeCallbacks(mHandshakeTimeout);
+
+        if (!sendRawMessage("@@" + mPublicKey)) {
+            onSocketHandshakeFail(getString(R.string.handshake_failed));
+            return;
+        }
+
+        mMainHandler.postDelayed(mHandshakeTimeout, Constants.HANDSHAKE_PHASE1_TIMEOUT);
+    }
+
+    private void handshakePhase2(String data) {
+    }
+
     private boolean sendRawMessage(String message) {
         if (mStatus == Constants.SERVICE.STATUS_STOPPED
                 || mStatus == Constants.SERVICE.STATUS_DISCONNECTED
@@ -386,35 +400,7 @@ public class ConnectionService extends Service {
 
         Log.d(TAG, "Socket connected");
 
-        JSONObject message;
-
-        try {
-            JSONObject features = new JSONObject();
-
-            features.put("notifications", mFeatureNotifications);
-            features.put("sms", mFeatureSMS);
-
-            message = new JSONObject();
-
-            message.put("type", "handshake");
-            message.put("features", features);
-            message.put("app_version", BuildConfig.VERSION_NAME);
-            message.put("device_name", mDeviceName);
-            message.put("os_type", "android");
-            message.put("os_version", Build.VERSION.RELEASE);
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-            onSocketHandshakeFail(getString(R.string.handshake_failed));
-
-            return;
-        }
-
-        mMainHandler.postDelayed(mHandshakeTimeout, Constants.HANDSHAKE_TIMEOUT);
-
-        if (!sendJsonMessage(message)) {
-            onSocketHandshakeFail(getString(R.string.handshake_failed));
-        }
+        handshakePhase1();
     }
 
     private void onSocketHandshakeSuccess() {
@@ -527,6 +513,11 @@ public class ConnectionService extends Service {
         }
 
         Log.d(TAG, "Message received");
+
+        if (data.startsWith("@@")) {
+            handshakePhase2(data.substring(2));
+            return;
+        }
 
         if (mCrypto == null) {
             Log.w(TAG, "Encryption not available");
