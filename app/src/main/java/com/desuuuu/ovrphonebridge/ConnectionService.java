@@ -80,6 +80,8 @@ public class ConnectionService extends Service {
     private boolean mHandshakeDone;
     private int mRetryAttempt;
 
+    private String mPublicKey;
+    private String mSecretKey;
     private Crypto mCrypto;
     private String mServerAddress;
     private int mServerPort;
@@ -354,7 +356,8 @@ public class ConnectionService extends Service {
     private boolean sendJsonMessage(JSONObject message) {
         if (mStatus == Constants.SERVICE.STATUS_STOPPED
                 || mStatus == Constants.SERVICE.STATUS_DISCONNECTED
-                || mConnectionHandler == null) {
+                || mConnectionHandler == null
+                || mCrypto == null) {
             return false;
         }
 
@@ -525,6 +528,11 @@ public class ConnectionService extends Service {
 
         Log.d(TAG, "Message received");
 
+        if (mCrypto == null) {
+            Log.w(TAG, "Encryption not available");
+            return;
+        }
+
         String decrypted;
 
         try {
@@ -648,13 +656,19 @@ public class ConnectionService extends Service {
             throw new Exception(getString(R.string.invalid_server_port));
         }
 
-        mServerAddress = serverAddress;
+        String publicKey = sharedPreferences.getString("public_key",null);
 
-        try {
-            mCrypto = new Crypto(encryptionPassword);
-        } catch (Exception e) {
-            throw new Exception(getString(R.string.encryption_failed));
+        if (TextUtils.isEmpty(publicKey)) {
+            throw new Exception(getString(R.string.missing_public_key));
         }
+
+        String secretKey = sharedPreferences.getString("secret_key",null);
+
+        if (TextUtils.isEmpty(secretKey)) {
+            throw new Exception(getString(R.string.missing_secret_key));
+        }
+
+        mServerAddress = serverAddress;
 
         mRetryForever = sharedPreferences.getBoolean(
                 "retry_forever",
@@ -675,6 +689,9 @@ public class ConnectionService extends Service {
         }
 
         mDeviceName = deviceName;
+
+        mPublicKey = publicKey;
+        mSecretKey = secretKey;
     }
 
     private void checkNotificationService() {
