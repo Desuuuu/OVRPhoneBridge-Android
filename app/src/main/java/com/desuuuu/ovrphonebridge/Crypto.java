@@ -1,6 +1,6 @@
 package com.desuuuu.ovrphonebridge;
 
-import android.text.TextUtils;
+import android.content.SharedPreferences;
 import android.util.Base64;
 
 import org.libsodium.jni.NaCl;
@@ -12,16 +12,22 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
 public class Crypto {
-    private byte[] mKey;
+    private byte[] mSharedPublicKey;
+    private byte[] mSharedSecretKey;
 
-    Crypto(String key) throws Exception {
+    private String mServerIdentifier;
+
+    Crypto(String publicKeyHex, String secretKeyHex, byte[] serverPublicKey) throws Exception {
         NaCl.sodium();
 
-        mKey = Base64.decode(key, Base64.DEFAULT);
+        mSharedPublicKey = new byte[32];
+        mSharedSecretKey = new byte[32];
 
-        if (mKey.length != Sodium.crypto_aead_xchacha20poly1305_ietf_keybytes()) {
-            throw new Exception("Invalid key length");
+        if (Sodium.crypto_kx_client_session_keys(mSharedSecretKey, mSharedPublicKey, Encoder.HEX.decode(publicKeyHex), Encoder.HEX.decode(secretKeyHex), serverPublicKey) != 0) {
+            throw new Exception("Invalid server public key");
         }
+
+        mServerIdentifier = getIdentifier(serverPublicKey);
     }
 
     String encrypt(String plainText) throws Exception {
@@ -47,7 +53,7 @@ public class Crypto {
                 ad.capacity(),
                 new byte[0],
                 nonce,
-                mKey) != 0) {
+                mSharedPublicKey) != 0) {
             throw new Exception("Encryption failed");
         }
 
@@ -93,7 +99,7 @@ public class Crypto {
                 ad.array(),
                 ad.capacity(),
                 nonce,
-                mKey) != 0) {
+                mSharedSecretKey) != 0) {
             throw new Exception("Decryption failed");
         }
 
@@ -110,6 +116,10 @@ public class Crypto {
         decrypted.get(result);
 
         return new String(result, StandardCharsets.UTF_8);
+    }
+
+    String getServerIdentifier() {
+        return mServerIdentifier;
     }
 
     static byte[] getServerPublicKey(String publicKeyHex, String secretKeyHex, String data) throws Exception {
