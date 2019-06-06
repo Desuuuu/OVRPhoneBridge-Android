@@ -286,9 +286,11 @@ public class ConnectionService extends Service {
 
             disconnect(getString(R.string.connection_failed));
 
-            if (mWakeLock.isHeld()) {
-                mWakeLock.release();
-            }
+            mMainHandler.postDelayed(() -> {
+                if (mWakeLock.isHeld()) {
+                    mWakeLock.release();
+                }
+            }, 3000);
         }
     }
 
@@ -428,9 +430,11 @@ public class ConnectionService extends Service {
 
         disconnect(message);
 
-        if (mWakeLock.isHeld()) {
-            mWakeLock.release();
-        }
+        mMainHandler.postDelayed(() -> {
+            if (mWakeLock.isHeld()) {
+                mWakeLock.release();
+            }
+        }, 3000);
     }
 
     private void onSocketConnectFail(Exception e) {
@@ -445,9 +449,11 @@ public class ConnectionService extends Service {
         if (mRetryAttempt >= Constants.MAX_RETRY) {
             disconnect(getString(R.string.connection_failed));
 
-            if (mWakeLock.isHeld()) {
-                mWakeLock.release();
-            }
+            mMainHandler.postDelayed(() -> {
+                if (mWakeLock.isHeld()) {
+                    mWakeLock.release();
+                }
+            }, 3000);
             return;
         }
 
