@@ -336,7 +336,7 @@ public class ConnectionService extends Service {
         }
     }
 
-    private boolean sendSocketMessage(JSONObject message) {
+    private boolean sendJsonMessage(JSONObject message) {
         if (mStatus == Constants.SERVICE.STATUS_STOPPED
                 || mStatus == Constants.SERVICE.STATUS_DISCONNECTED
                 || mConnectionHandler == null) {
@@ -394,7 +394,7 @@ public class ConnectionService extends Service {
 
         mMainHandler.postDelayed(mHandshakeTimeout, Constants.HANDSHAKE_TIMEOUT);
 
-        if (!sendSocketMessage(message)) {
+        if (!sendJsonMessage(message)) {
             onSocketHandshakeFail(getString(R.string.handshake_failed));
         }
     }
@@ -772,7 +772,7 @@ public class ConnectionService extends Service {
             message.put("type", "sms_list");
             message.put("list", array);
 
-            sendSocketMessage(message);
+            sendJsonMessage(message);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to build message");
 
@@ -881,7 +881,7 @@ public class ConnectionService extends Service {
             message.put("page", page);
             message.put("list", array);
 
-            sendSocketMessage(message);
+            sendJsonMessage(message);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to build message");
 
@@ -1225,7 +1225,7 @@ public class ConnectionService extends Service {
                     message.put("type", "notification_list");
                     message.put("list", array);
 
-                    sendSocketMessage(message);
+                    sendJsonMessage(message);
                 } catch (JSONException e) {
                     Log.e(TAG, "Failed to build message");
 
@@ -1253,7 +1253,7 @@ public class ConnectionService extends Service {
                     message.put("type", "notification_received");
                     message.put("notification", object);
 
-                    sendSocketMessage(message);
+                    sendJsonMessage(message);
                 } catch (JSONException e) {
                     Log.e(TAG, "Failed to build message");
 
@@ -1281,7 +1281,7 @@ public class ConnectionService extends Service {
                     message.put("type", "notification_removed");
                     message.put("notification", object);
 
-                    sendSocketMessage(message);
+                    sendJsonMessage(message);
                 } catch (JSONException e) {
                     Log.e(TAG, "Failed to build message");
 
@@ -1316,7 +1316,7 @@ public class ConnectionService extends Service {
                             .put("success", (getResultCode() == Activity.RESULT_OK))
                             .put("sms", sms);
 
-                    sendSocketMessage(message);
+                    sendJsonMessage(message);
                 } catch (JSONException e) {
                     Log.e(TAG, "Failed to build message");
 
