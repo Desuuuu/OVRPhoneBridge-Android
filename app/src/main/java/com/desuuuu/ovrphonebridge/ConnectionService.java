@@ -336,6 +336,21 @@ public class ConnectionService extends Service {
         }
     }
 
+    private boolean sendRawMessage(String message) {
+        if (mStatus == Constants.SERVICE.STATUS_STOPPED
+                || mStatus == Constants.SERVICE.STATUS_DISCONNECTED
+                || mConnectionHandler == null) {
+            return false;
+        }
+
+        Message msg = Message.obtain(
+                mConnectionHandler,
+                Constants.MESSAGE.MESSAGE,
+                message);
+
+        return mConnectionHandler.sendMessage(msg);
+    }
+
     private boolean sendJsonMessage(JSONObject message) {
         if (mStatus == Constants.SERVICE.STATUS_STOPPED
                 || mStatus == Constants.SERVICE.STATUS_DISCONNECTED
