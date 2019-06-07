@@ -134,7 +134,7 @@ public class ConnectionService extends Service {
     @SuppressLint("SimpleDateFormat")
     private void startService() {
         if (mStatus == Constants.SERVICE.STATUS_DISCONNECTED) {
-            startForeground(Constants.NOTIFICATION.ID_CONNECTION_SERVICE, buildNotification());
+            startForeground(Constants.NOTIFICATION.ID_CONNECTION_SERVICE, buildForegroundNotification());
 
             mRetryAttempt = 0;
 
@@ -143,7 +143,7 @@ public class ConnectionService extends Service {
         }
 
         if (mStatus != Constants.SERVICE.STATUS_STOPPED) {
-            startForeground(Constants.NOTIFICATION.ID_CONNECTION_SERVICE, buildNotification());
+            startForeground(Constants.NOTIFICATION.ID_CONNECTION_SERVICE, buildForegroundNotification());
 
             return;
         }
@@ -156,7 +156,7 @@ public class ConnectionService extends Service {
 
         broadcastStatus();
 
-        startForeground(Constants.NOTIFICATION.ID_CONNECTION_SERVICE, buildNotification());
+        startForeground(Constants.NOTIFICATION.ID_CONNECTION_SERVICE, buildForegroundNotification());
 
         mMainHandler = new Handler();
         mDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -262,7 +262,7 @@ public class ConnectionService extends Service {
 
             broadcastStatus();
 
-            updateForegroundNotification(buildNotification());
+            updateForegroundNotification(buildForegroundNotification());
         }
 
         if (mFeatureNotifications) {
@@ -334,7 +334,7 @@ public class ConnectionService extends Service {
         if (!silent) {
             broadcastStatus(message);
 
-            updateForegroundNotification(buildNotification(message));
+            updateForegroundNotification(buildForegroundNotification(message));
         }
     }
 
@@ -420,7 +420,7 @@ public class ConnectionService extends Service {
 
         broadcastStatus();
 
-        updateForegroundNotification(buildNotification());
+        updateForegroundNotification(buildForegroundNotification());
     }
 
     private void onSocketHandshakeFail(String message) {
@@ -467,7 +467,7 @@ public class ConnectionService extends Service {
 
         broadcastStatus(getString(R.string.connection_failed_retry));
 
-        updateForegroundNotification(buildNotification());
+        updateForegroundNotification(buildForegroundNotification());
 
         if (!mRetryForever) {
             mRetryAttempt++;
@@ -502,7 +502,7 @@ public class ConnectionService extends Service {
 
         broadcastStatus(getString(R.string.connection_lost_retry));
 
-        updateForegroundNotification(buildNotification());
+        updateForegroundNotification(buildForegroundNotification());
 
         mMainHandler.postDelayed(mConnect, 10000);
     }
@@ -1025,11 +1025,11 @@ public class ConnectionService extends Service {
         }
     }
 
-    private Notification buildNotification() {
-        return buildNotification(null);
+    private Notification buildForegroundNotification() {
+        return buildForegroundNotification(null);
     }
 
-    private Notification buildNotification(String message) {
+    private Notification buildForegroundNotification(String message) {
         Log.d(TAG, "Building notification");
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
