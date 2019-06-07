@@ -1037,7 +1037,7 @@ public class ConnectionService extends Service {
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        NotificationCompat.Builder builder = getNotificationBuilder();
+        NotificationCompat.Builder builder = getForegroundNotificationBuilder();
 
         switch (mStatus) {
             case Constants.SERVICE.STATUS_CONNECTING:
@@ -1110,7 +1110,7 @@ public class ConnectionService extends Service {
         notificationManager.notify(Constants.NOTIFICATION.ID_CONNECTION_SERVICE, notification);
     }
 
-    private NotificationCompat.Builder getNotificationBuilder() {
+    private NotificationCompat.Builder getForegroundNotificationBuilder() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = (NotificationManager)getSystemService(
                     Activity.NOTIFICATION_SERVICE);
