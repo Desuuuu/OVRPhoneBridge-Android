@@ -45,6 +45,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -360,6 +361,62 @@ public class ConnectionService extends Service {
     }
 
     private void handshakePhase2(String data) {
+    }
+
+    private void handshakeResponse(boolean allow, boolean remember, String identifier) {
+        if (mStatus == Constants.SERVICE.STATUS_STOPPED
+                || mStatus == Constants.SERVICE.STATUS_DISCONNECTED
+                || mCrypto == null) {
+            return;
+        }
+
+        if (!allow || identifier == null || !identifier.equals(mCrypto.getServerIdentifier())) {
+            onSocketHandshakeFail(getString(R.string.handshake_not_verified));
+
+            return;
+        }
+
+        dismissHandshakePrompt();
+
+        if (remember) {
+            Set<String> mAllowedServers = Objects.requireNonNull(mSharedPreferences.getStringSet(
+                    "allowed_servers",
+                    new HashSet<>()));
+
+            mAllowedServers.add(identifier);
+
+            mSharedPreferences.edit().putStringSet("allowed_servers", mAllowedServers).apply();
+        }
+
+        JSONObject message;
+
+        try {
+            JSONObject features = new JSONObject();
+
+            features.put("notifications", mFeatureNotifications);
+            features.put("sms", mFeatureSMS);
+
+            message = new JSONObject();
+
+            message.put("type", "handshake");
+            message.put("app_version", BuildConfig.VERSION_NAME);
+            message.put("device_name", mDeviceName);
+            message.put("os_type", "android");
+            message.put("os_version", Build.VERSION.RELEASE);
+            message.put("features", features);
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+            onSocketHandshakeFail(getString(R.string.handshake_failed));
+            return;
+        }
+
+        if (!sendJsonMessage(message)) {
+            onSocketHandshakeFail(getString(R.string.handshake_failed));
+            return;
+        }
+
+        mMainHandler.postDelayed(mHandshakeTimeout, Constants.HANDSHAKE_TIMEOUT);
     }
 
     private boolean sendRawMessage(String message) {
