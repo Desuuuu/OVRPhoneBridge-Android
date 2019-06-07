@@ -1151,6 +1151,54 @@ public class ConnectionService extends Service {
                 Constants.NOTIFICATION.CHANNEL_CONNECTION_SERVICE);
     }
 
+    private void sendHandshakeNotification(String identifier) {
+        Log.d(TAG, "Building handshake notification");
+
+        NotificationCompat.Builder builder = getHandshakeNotificationBuilder();
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.setAction(Intent.ACTION_MAIN);
+        notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        notificationIntent.putExtra("type", "handshake_prompt");
+        notificationIntent.putExtra("identifier", identifier);
+
+        builder.setContentIntent(PendingIntent.getActivity(
+                this,
+                0,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT));
+
+        Intent deleteIntent = new Intent(this, ConnectionService.class);
+        deleteIntent.setAction(Constants.INTENT.HANDSHAKE_RESPONSE);
+        deleteIntent.putExtra("allow", false);
+
+        builder.setDeleteIntent(PendingIntent.getService(
+                this,
+                0,
+                deleteIntent,
+                0));
+
+        builder.setContentTitle(getString(R.string.handshake_prompt_title));
+        builder.setContentText(getString(R.string.handshake_prompt_text));
+        builder.setSmallIcon(R.drawable.ic_notification);
+        builder.setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        builder.setOngoing(false);
+        builder.setShowWhen(true);
+        builder.setLocalOnly(true);
+        builder.setOnlyAlertOnce(false);
+        builder.setAutoCancel(false);
+        builder.setTimeoutAfter(Constants.HANDSHAKE_PROMPT_TIMEOUT);
+        builder.setDefaults(Notification.DEFAULT_ALL);
+        builder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+
+        NotificationManager notificationManager = (NotificationManager)getSystemService(
+                Activity.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(Constants.NOTIFICATION.ID_HANDSHAKE, builder.build());
+    }
+
     private NotificationCompat.Builder getHandshakeNotificationBuilder() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager)getSystemService(

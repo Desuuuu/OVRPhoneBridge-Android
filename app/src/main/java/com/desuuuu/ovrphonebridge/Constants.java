@@ -8,6 +8,7 @@ public class Constants {
     static final int MAX_RETRY = 15;
     static final int HANDSHAKE_PHASE1_TIMEOUT = 15000;
     static final int HANDSHAKE_PHASE2_TIMEOUT = 120000;
+    static final int HANDSHAKE_PROMPT_TIMEOUT = 120000;
     static final int SMS_LIST_MAX = 20;
     static final int SMS_PER_PAGE = 30;
 
@@ -15,6 +16,7 @@ public class Constants {
         String START_CONNECTION_SERVICE = "com.desuuuu.ovrphonebridge.intent.start_connection_service";
         String STOP_CONNECTION_SERVICE = "com.desuuuu.ovrphonebridge.intent.stop_connection_service";
         String DISCONNECT_CONNECTION_SERVICE = "com.desuuuu.ovrphonebridge.intent.disconnect_connection_service";
+        String HANDSHAKE_RESPONSE = "com.desuuuu.ovrphonebridge.intent.handshake_response";
 
         String START_NOTIFICATION_SERVICE = "com.desuuuu.ovrphonebridge.intent.start_notification_service";
 
@@ -34,6 +36,7 @@ public class Constants {
         String CHANNEL_CONNECTION_SERVICE = "com.desuuuu.ovrphonebridge.notification.CHANNEL_CONNECTION_SERVICE";
         String CHANNEL_HANDSHAKE = "com.desuuuu.ovrphonebridge.notification.CHANNEL_HANDSHAKE";
         int ID_CONNECTION_SERVICE = 3981;
+        int ID_HANDSHAKE = 5643;
         int SERVICE_CHECK_INTERVAL = 900000;
         int MAX_TITLE_LENGTH = 40;
         int MAX_TEXT_LENGTH = 250;
