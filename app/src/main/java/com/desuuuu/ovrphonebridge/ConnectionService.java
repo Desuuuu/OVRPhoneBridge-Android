@@ -1025,19 +1025,38 @@ public class ConnectionService extends Service {
         }
     }
 
+    private void dismissHandshakePrompt() {
+        Log.d(TAG, "Dismissing handshake prompt");
+
+        if (mBroadcastManager != null) {
+            mBroadcastManager.sendBroadcast(new Intent(Constants.INTENT.DISMISS_HANDSHAKE_PROMPT));
+        }
+
+        NotificationManager notificationManager = (NotificationManager)getSystemService(
+                Activity.NOTIFICATION_SERVICE);
+
+        notificationManager.cancel(Constants.NOTIFICATION.ID_HANDSHAKE);
+    }
+
     private Notification buildForegroundNotification() {
         return buildForegroundNotification(null);
     }
 
     private Notification buildForegroundNotification(String message) {
-        Log.d(TAG, "Building notification");
+        Log.d(TAG, "Building foreground notification");
+
+        NotificationCompat.Builder builder = getForegroundNotificationBuilder();
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        NotificationCompat.Builder builder = getForegroundNotificationBuilder();
+        builder.setContentIntent(PendingIntent.getActivity(
+                this,
+                0,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT));
 
         switch (mStatus) {
             case Constants.SERVICE.STATUS_CONNECTING:
@@ -1056,12 +1075,7 @@ public class ConnectionService extends Service {
                 break;
         }
 
-        builder.setContentIntent(PendingIntent.getActivity(
-                this,
-                0,
-                notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT));
-
+        builder.setChannelId(Constants.NOTIFICATION.CHANNEL_CONNECTION_SERVICE);
         builder.setSmallIcon(R.drawable.ic_notification);
         builder.setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         builder.setOngoing(true);
