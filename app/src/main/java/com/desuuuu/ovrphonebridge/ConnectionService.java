@@ -112,6 +112,12 @@ public class ConnectionService extends Service {
                     case Constants.INTENT.DISCONNECT_CONNECTION_SERVICE:
                         disconnect();
                         break;
+
+                    case Constants.INTENT.HANDSHAKE_RESPONSE:
+                        handshakeResponse(intent.getBooleanExtra("allow", false),
+                                intent.getBooleanExtra("remember", true),
+                                intent.getStringExtra("identifier"));
+                        break;
                 }
             }
         }
