@@ -64,6 +64,7 @@ public class ConnectionService extends Service {
     private PhoneNumberUtil mPhoneNumberUtil;
     private PowerManager.WakeLock mWakeLock;
     private LocalBroadcastManager mBroadcastManager;
+    private SharedPreferences mSharedPreferences;
 
     private StatusRequestReceiver mStatusRequestReceiver;
     private NotificationListReceiver mNotificationListReceiver;
@@ -149,6 +150,10 @@ public class ConnectionService extends Service {
         }
 
         Log.d(TAG, "Starting service");
+
+        mSharedPreferences = getSharedPreferences(
+                Constants.PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
 
         mBroadcastManager = LocalBroadcastManager.getInstance(this);
 
@@ -615,23 +620,19 @@ public class ConnectionService extends Service {
     private void parseSettings() throws Exception {
         Log.d(TAG, "Parsing settings");
 
-        SharedPreferences sharedPreferences = getSharedPreferences(
-                Constants.PREFERENCES_NAME,
-                Context.MODE_PRIVATE);
-
-        String serverAddress = sharedPreferences.getString("server_address", null);
+        String serverAddress = mSharedPreferences.getString("server_address", null);
 
         if (TextUtils.isEmpty(serverAddress)) {
             throw new Exception(getString(R.string.missing_server_address));
         }
 
-        String serverPort = sharedPreferences.getString("server_port", Constants.DEFAULT.PORT);
+        String serverPort = mSharedPreferences.getString("server_port", Constants.DEFAULT.PORT);
 
         if (TextUtils.isEmpty(serverPort)) {
             throw new Exception(getString(R.string.missing_server_port));
         }
 
-        String deviceName = sharedPreferences.getString("device_name", MainActivity.getDeviceName());
+        String deviceName = mSharedPreferences.getString("device_name", MainActivity.getDeviceName());
 
         if (TextUtils.isEmpty(deviceName)) {
             throw new Exception(getString(R.string.missing_device_name));
@@ -647,13 +648,13 @@ public class ConnectionService extends Service {
             throw new Exception(getString(R.string.invalid_server_port));
         }
 
-        String publicKey = sharedPreferences.getString("public_key",null);
+        String publicKey = mSharedPreferences.getString("public_key",null);
 
         if (TextUtils.isEmpty(publicKey)) {
             throw new Exception(getString(R.string.missing_public_key));
         }
 
-        String secretKey = sharedPreferences.getString("secret_key",null);
+        String secretKey = mSharedPreferences.getString("secret_key",null);
 
         if (TextUtils.isEmpty(secretKey)) {
             throw new Exception(getString(R.string.missing_secret_key));
@@ -661,11 +662,11 @@ public class ConnectionService extends Service {
 
         mServerAddress = serverAddress;
 
-        mRetryForever = sharedPreferences.getBoolean(
+        mRetryForever = mSharedPreferences.getBoolean(
                 "retry_forever",
                 Constants.DEFAULT.RETRY_FOREVER);
 
-        mFeatureNotifications = sharedPreferences.getBoolean(
+        mFeatureNotifications = mSharedPreferences.getBoolean(
                 "feature_notifications",
                 Constants.DEFAULT.FEATURE_NOTIFICATIONS);
 
@@ -673,7 +674,7 @@ public class ConnectionService extends Service {
             mFeatureNotifications = false;
         }
 
-        mFeatureSMS = sharedPreferences.getBoolean("feature_sms", Constants.DEFAULT.FEATURE_SMS);
+        mFeatureSMS = mSharedPreferences.getBoolean("feature_sms", Constants.DEFAULT.FEATURE_SMS);
 
         if (mFeatureSMS && !MainActivity.hasSMSPermissions(this)) {
             mFeatureSMS = false;
