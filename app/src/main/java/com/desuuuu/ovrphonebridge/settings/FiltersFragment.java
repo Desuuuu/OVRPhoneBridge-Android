@@ -47,7 +47,9 @@ public class FiltersFragment extends PreferenceFragmentCompat implements SharedP
 
         mShowSystemApps = mSharedPreferences.getBoolean("applications_show_system", false);
 
-        mExcludedApplications = mSharedPreferences.getStringSet("notifications_excluded_applications", new HashSet<>());
+        mExcludedApplications = Objects.requireNonNull(mSharedPreferences.getStringSet(
+                "notifications_excluded_applications",
+                new HashSet<>()));
 
         mPackageManager = getContext().getPackageManager();
 
@@ -94,7 +96,9 @@ public class FiltersFragment extends PreferenceFragmentCompat implements SharedP
         }
 
         if (key.equals("notifications_excluded_applications")) {
-            mExcludedApplications = sharedPreferences.getStringSet("notifications_excluded_applications", new HashSet<>());
+            mExcludedApplications = Objects.requireNonNull(sharedPreferences.getStringSet(
+                    "notifications_excluded_applications",
+                    new HashSet<>()));
 
             populateApplicationList();
         } else if (key.equals("applications_show_system")) {

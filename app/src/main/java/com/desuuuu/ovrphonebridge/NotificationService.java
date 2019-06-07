@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -72,7 +73,9 @@ public class NotificationService extends NotificationListenerService implements 
                 mNotificationDismissReceiver,
                 new IntentFilter(Constants.INTENT.NOTIFICATION_DISMISS));
 
-        mExcludedApplications = mSharedPreferences.getStringSet("notifications_excluded_applications", new HashSet<>());
+        mExcludedApplications = Objects.requireNonNull(mSharedPreferences.getStringSet(
+                "notifications_excluded_applications",
+                new HashSet<>()));
 
         mLineSeparator = System.getProperty("line.separator");
 
@@ -141,7 +144,9 @@ public class NotificationService extends NotificationListenerService implements 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("notifications_excluded_applications")) {
-            mExcludedApplications = sharedPreferences.getStringSet("notifications_excluded_applications", new HashSet<>());
+            mExcludedApplications = Objects.requireNonNull(sharedPreferences.getStringSet(
+                    "notifications_excluded_applications",
+                    new HashSet<>()));
         }
     }
 
