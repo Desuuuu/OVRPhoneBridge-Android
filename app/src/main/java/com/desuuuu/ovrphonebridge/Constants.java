@@ -32,6 +32,7 @@ public class Constants {
 
     public interface NOTIFICATION {
         String CHANNEL_CONNECTION_SERVICE = "com.desuuuu.ovrphonebridge.notification.CHANNEL_CONNECTION_SERVICE";
+        String CHANNEL_HANDSHAKE = "com.desuuuu.ovrphonebridge.notification.CHANNEL_HANDSHAKE";
         int ID_CONNECTION_SERVICE = 3981;
         int SERVICE_CHECK_INTERVAL = 900000;
         int MAX_TITLE_LENGTH = 40;

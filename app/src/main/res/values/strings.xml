@@ -4,6 +4,8 @@
     <string name="notification_service">OVRPhoneBridge Notifications</string>
     <string name="connection_service_channel_name">Connection Service</string>
     <string name="connection_service_channel_description">Handle server connection in the background</string>
+    <string name="handshake_channel_name">Identifier verification</string>
+    <string name="handshake_channel_description">Server identifier verification prompt</string>
     <string name="title_activity_settings_main">Settings</string>
     <string name="title_activity_settings_filters">Filters</string>
     <string name="connected">Connected</string>

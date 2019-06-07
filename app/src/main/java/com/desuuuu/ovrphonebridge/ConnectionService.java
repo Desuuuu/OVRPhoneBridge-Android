@@ -1076,7 +1076,6 @@ public class ConnectionService extends Service {
                 break;
         }
 
-        builder.setChannelId(Constants.NOTIFICATION.CHANNEL_CONNECTION_SERVICE);
         builder.setSmallIcon(R.drawable.ic_notification);
         builder.setColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         builder.setOngoing(true);
@@ -1150,6 +1149,33 @@ public class ConnectionService extends Service {
         return new NotificationCompat.Builder(
                 this,
                 Constants.NOTIFICATION.CHANNEL_CONNECTION_SERVICE);
+    }
+
+    private NotificationCompat.Builder getHandshakeNotificationBuilder() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager)getSystemService(
+                    Activity.NOTIFICATION_SERVICE);
+
+            NotificationChannel channel = notificationManager.getNotificationChannel(
+                    Constants.NOTIFICATION.CHANNEL_HANDSHAKE);
+
+            if (channel == null) {
+                channel = new NotificationChannel(
+                        Constants.NOTIFICATION.CHANNEL_HANDSHAKE,
+                        getString(R.string.handshake_channel_name),
+                        NotificationManager.IMPORTANCE_HIGH);
+
+                channel.setDescription(getString(R.string.handshake_channel_description));
+                channel.enableLights(true);
+                channel.enableVibration(true);
+
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        return new NotificationCompat.Builder(
+                this,
+                Constants.NOTIFICATION.CHANNEL_HANDSHAKE);
     }
 
     private ContactInfo getContactInfo(String number) {
