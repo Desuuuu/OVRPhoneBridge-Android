@@ -30,6 +30,7 @@
     <string name="miscellaneous">Miscellaneous</string>
     <string name="device_name">Device name</string>
     <string name="identifier">Identifier</string>
+    <string name="clear_allowed_servers">Clear server whitelist</string>
     <string name="version">Version</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_summary">Report technical issues or suggest new features</string>

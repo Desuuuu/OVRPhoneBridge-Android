@@ -20,7 +20,9 @@ import com.desuuuu.ovrphonebridge.R;
 import com.google.common.net.InetAddresses;
 import com.google.common.net.InternetDomainName;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
@@ -206,6 +208,22 @@ public class MainFragment extends PreferenceFragmentCompat {
         Preference identifier = Objects.requireNonNull(findPreference("identifier"));
 
         identifier.setSummary(mSharedPreferences.getString("identifier", getString(R.string.summary_not_set)));
+
+        Preference clearAllowedServers = Objects.requireNonNull(findPreference("clear_allowed_servers"));
+
+        Set<String> mAllowedServers = Objects.requireNonNull(mSharedPreferences.getStringSet(
+                "allowed_servers",
+                new HashSet<>()));
+
+        clearAllowedServers.setEnabled(mAllowedServers.size() > 0);
+
+        clearAllowedServers.setOnPreferenceClickListener(preference -> {
+            mSharedPreferences.edit().remove("allowed_servers").commit();
+
+            clearAllowedServers.setEnabled(false);
+
+            return true;
+        });
 
         Preference version = Objects.requireNonNull(findPreference("version"));
 

@@ -63,6 +63,10 @@
             android:title="@string/identifier" />
 
         <Preference
+            android:key="clear_allowed_servers"
+            android:title="@string/clear_allowed_servers" />
+
+        <Preference
             android:key="version"
             android:title="@string/version" />
 
