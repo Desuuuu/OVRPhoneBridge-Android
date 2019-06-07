@@ -1112,25 +1112,23 @@ public class ConnectionService extends Service {
 
     private NotificationCompat.Builder getForegroundNotificationBuilder() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager manager = (NotificationManager)getSystemService(
+            NotificationManager notificationManager = (NotificationManager)getSystemService(
                     Activity.NOTIFICATION_SERVICE);
 
-            if (manager != null) {
-                NotificationChannel channel = manager.getNotificationChannel(
-                        Constants.NOTIFICATION.CHANNEL_CONNECTION_SERVICE);
+            NotificationChannel channel = notificationManager.getNotificationChannel(
+                    Constants.NOTIFICATION.CHANNEL_CONNECTION_SERVICE);
 
-                if (channel == null) {
-                    channel = new NotificationChannel(
-                            Constants.NOTIFICATION.CHANNEL_CONNECTION_SERVICE,
-                            getString(R.string.connection_service_channel_name),
-                            NotificationManager.IMPORTANCE_LOW);
+            if (channel == null) {
+                channel = new NotificationChannel(
+                        Constants.NOTIFICATION.CHANNEL_CONNECTION_SERVICE,
+                        getString(R.string.connection_service_channel_name),
+                        NotificationManager.IMPORTANCE_LOW);
 
-                    channel.setDescription(getString(R.string.connection_service_channel_description));
-                    channel.enableLights(false);
-                    channel.enableVibration(false);
+                channel.setDescription(getString(R.string.connection_service_channel_description));
+                channel.enableLights(false);
+                channel.enableVibration(false);
 
-                    manager.createNotificationChannel(channel);
-                }
+                notificationManager.createNotificationChannel(channel);
             }
         }
 
