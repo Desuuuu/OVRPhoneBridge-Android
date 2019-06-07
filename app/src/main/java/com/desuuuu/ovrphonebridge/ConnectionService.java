@@ -344,6 +344,11 @@ public class ConnectionService extends Service {
     }
 
     private void handshakePhase1() {
+        if (mStatus == Constants.SERVICE.STATUS_STOPPED
+                || mStatus == Constants.SERVICE.STATUS_DISCONNECTED) {
+            return;
+        }
+
         mMainHandler.removeCallbacks(mHandshakeTimeout);
 
         if (!sendRawMessage("@@" + mPublicKey)) {
@@ -351,7 +356,7 @@ public class ConnectionService extends Service {
             return;
         }
 
-        mMainHandler.postDelayed(mHandshakeTimeout, Constants.HANDSHAKE_PHASE1_TIMEOUT);
+        mMainHandler.postDelayed(mHandshakeTimeout, Constants.HANDSHAKE_TIMEOUT);
     }
 
     private void handshakePhase2(String data) {
