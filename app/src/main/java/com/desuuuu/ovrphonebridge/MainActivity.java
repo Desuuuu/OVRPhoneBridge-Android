@@ -83,6 +83,31 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         mBroadcastManager.registerReceiver(
                 mDismissHandshakePromptReceiver,
                 new IntentFilter(Constants.INTENT.DISMISS_HANDSHAKE_PROMPT));
+
+        Intent intent = getIntent();
+
+        if (intent != null) {
+            String type = intent.getStringExtra("type");
+            String identifier = intent.getStringExtra("identifier");
+
+            if (type != null && type.equals("handshake_prompt") && !TextUtils.isEmpty(identifier)) {
+                openHandshakePrompt(identifier);
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null) {
+            String type = intent.getStringExtra("type");
+            String identifier = intent.getStringExtra("identifier");
+
+            if (type != null && type.equals("handshake_prompt") && !TextUtils.isEmpty(identifier)) {
+                openHandshakePrompt(identifier);
+            }
+        }
     }
 
     @Override
@@ -140,6 +165,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
 
         mServiceSwitch.setOnCheckedChangeListener(this);
+    }
+
+    private void openHandshakePrompt(String identifier) {
     }
 
     private void sendHandshakeResponse(boolean allow, boolean remember, String identifier) {
