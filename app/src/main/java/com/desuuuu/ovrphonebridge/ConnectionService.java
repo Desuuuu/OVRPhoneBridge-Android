@@ -367,6 +367,44 @@ public class ConnectionService extends Service {
     }
 
     private void handshakePhase2(String data) {
+        if (mStatus == Constants.SERVICE.STATUS_STOPPED
+                || mStatus == Constants.SERVICE.STATUS_DISCONNECTED) {
+            return;
+        }
+
+        mMainHandler.removeCallbacks(mHandshakeTimeout);
+
+        byte[] serverPublicKey;
+
+        try {
+            serverPublicKey = Crypto.getServerPublicKey(mPublicKey, mSecretKey, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            onSocketHandshakeFail(getString(R.string.handshake_failed));
+            return;
+        }
+
+        try {
+            mCrypto = new Crypto(mPublicKey, mSecretKey, serverPublicKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            onSocketHandshakeFail(getString(R.string.handshake_failed));
+            return;
+        }
+
+        String identifier = mCrypto.getServerIdentifier();
+
+        Set<String> mAllowedServers = Objects.requireNonNull(mSharedPreferences.getStringSet(
+                "allowed_servers",
+                new HashSet<>()));
+
+        if (mAllowedServers.contains(identifier)) {
+            handshakeResponse(true, false, identifier);
+        }
+
+        sendHandshakeNotification(identifier);
     }
 
     private void handshakeResponse(boolean allow, boolean remember, String identifier) {
