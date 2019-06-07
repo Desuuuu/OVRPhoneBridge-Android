@@ -142,6 +142,18 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         mServiceSwitch.setOnCheckedChangeListener(this);
     }
 
+    private void sendHandshakeResponse(boolean allow, boolean remember, String identifier) {
+        Intent intent = new Intent(MainActivity.this, ConnectionService.class);
+
+        intent.setAction(Constants.INTENT.HANDSHAKE_RESPONSE);
+
+        intent.putExtra("allow", allow);
+        intent.putExtra("remember", remember);
+        intent.putExtra("identifier", identifier);
+
+        startService(intent);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
