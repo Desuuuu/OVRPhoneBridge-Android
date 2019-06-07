@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private SharedPreferences mSharedPreferences;
     private LocalBroadcastManager mBroadcastManager;
     private StatusNotificationReceiver mStatusNotificationReceiver;
+    private DismissHandshakePromptReceiver mDismissHandshakePromptReceiver;
 
     private Switch mServiceSwitch;
     private TextView mServiceText;
@@ -76,23 +77,36 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
         mServiceSwitch.setVisibility(View.VISIBLE);
         mServiceText.setVisibility(View.VISIBLE);
+
+        mDismissHandshakePromptReceiver = new DismissHandshakePromptReceiver();
+
+        mBroadcastManager.registerReceiver(
+                mDismissHandshakePromptReceiver,
+                new IntentFilter(Constants.INTENT.DISMISS_HANDSHAKE_PROMPT));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mBroadcastManager != null && mStatusNotificationReceiver != null) {
-            mBroadcastManager.unregisterReceiver(mStatusNotificationReceiver);
+        if (mBroadcastManager != null) {
+            if (mStatusNotificationReceiver != null) {
+                mBroadcastManager.unregisterReceiver(mStatusNotificationReceiver);
+                mStatusNotificationReceiver = null;
+            }
 
-            if (mConnectionStatus == Constants.SERVICE.STATUS_DISCONNECTED) {
-                Intent intent = new Intent(MainActivity.this, ConnectionService.class);
-
-                stopService(intent);
+            if (mDismissHandshakePromptReceiver != null) {
+                mBroadcastManager.unregisterReceiver(mDismissHandshakePromptReceiver);
+                mDismissHandshakePromptReceiver = null;
             }
 
             mBroadcastManager = null;
-            mStatusNotificationReceiver = null;
+        }
+
+        if (mConnectionStatus == Constants.SERVICE.STATUS_DISCONNECTED) {
+            Intent intent = new Intent(MainActivity.this, ConnectionService.class);
+
+            stopService(intent);
         }
 
         if (mServiceSwitch != null) {
@@ -250,6 +264,12 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
     }
 
+    private class DismissHandshakePromptReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        }
+    }
+
     public static String getDeviceName() {
         String result;
 
@@ -275,7 +295,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         return result;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(
                 Context.CONNECTIVITY_SERVICE);
