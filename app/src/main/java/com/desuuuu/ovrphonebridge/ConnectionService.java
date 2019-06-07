@@ -440,6 +440,8 @@ public class ConnectionService extends Service {
 
         Log.e(TAG, "Handshake failed");
 
+        dismissHandshakePrompt();
+
         mRetryAttempt = 0;
 
         disconnect(message);

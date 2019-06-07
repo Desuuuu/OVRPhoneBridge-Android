@@ -22,6 +22,8 @@ public class Constants {
         String STATUS_REQUEST = "com.desuuuu.ovrphonebridge.intent.status_request";
         String STATUS_NOTIFICATION = "com.desuuuu.ovrphonebridge.intent.status_notification";
 
+        String DISMISS_HANDSHAKE_PROMPT = "com.desuuuu.ovrphonebridge.intent.dismiss_handshake_prompt";
+
         String NOTIFICATION_LIST_REQUEST = "com.desuuuu.ovrphonebridge.intent.notification_list_request";
         String NOTIFICATION_LIST = "com.desuuuu.ovrphonebridge.intent.notification_list";
         String NOTIFICATION_RECEIVED = "com.desuuuu.ovrphonebridge.intent.notification_received";
