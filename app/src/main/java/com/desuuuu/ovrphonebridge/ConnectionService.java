@@ -96,33 +96,35 @@ public class ConnectionService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) {
             startService();
-        } else {
-            String action = intent.getAction();
 
-            if (action != null) {
-                switch (action) {
-                    case Constants.INTENT.START_CONNECTION_SERVICE:
-                        startService();
-                        break;
+            return START_STICKY;
+        }
 
-                    case Constants.INTENT.STOP_CONNECTION_SERVICE:
-                        stopService();
-                        break;
+        String action = intent.getAction();
 
-                    case Constants.INTENT.DISCONNECT_CONNECTION_SERVICE:
-                        disconnect();
-                        break;
+        if (action != null) {
+            switch (action) {
+                case Constants.INTENT.START_CONNECTION_SERVICE:
+                    startService();
+                    return START_STICKY;
 
-                    case Constants.INTENT.HANDSHAKE_RESPONSE:
-                        handshakeResponse(intent.getBooleanExtra("allow", false),
-                                intent.getBooleanExtra("remember", true),
-                                intent.getStringExtra("identifier"));
-                        break;
-                }
+                case Constants.INTENT.STOP_CONNECTION_SERVICE:
+                    stopService();
+                    break;
+
+                case Constants.INTENT.DISCONNECT_CONNECTION_SERVICE:
+                    disconnect();
+                    break;
+
+                case Constants.INTENT.HANDSHAKE_RESPONSE:
+                    handshakeResponse(intent.getBooleanExtra("allow", false),
+                            intent.getBooleanExtra("remember", true),
+                            intent.getStringExtra("identifier"));
+                    break;
             }
         }
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
