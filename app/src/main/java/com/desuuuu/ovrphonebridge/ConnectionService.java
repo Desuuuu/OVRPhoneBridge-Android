@@ -404,9 +404,9 @@ public class ConnectionService extends Service {
 
         if (mAllowedServers.contains(identifier)) {
             handshakeResponse(true, false, identifier);
+        } else {
+            sendHandshakeNotification(identifier);
         }
-
-        sendHandshakeNotification(identifier);
     }
 
     private void handshakeResponse(boolean allow, boolean remember, String identifier) {
