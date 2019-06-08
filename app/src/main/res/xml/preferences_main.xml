@@ -17,6 +17,10 @@
             android:singleLine="true"
             android:maxLength="5" />
 
+        <Preference
+            android:key="clear_allowed_servers"
+            android:title="@string/clear_allowed_servers" />
+
         <SwitchPreference
             android:title="@string/retry_forever"
             android:key="retry_forever" />
@@ -61,10 +65,6 @@
         <Preference
             android:key="identifier"
             android:title="@string/identifier" />
-
-        <Preference
-            android:key="clear_allowed_servers"
-            android:title="@string/clear_allowed_servers" />
 
         <Preference
             android:key="version"
