@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.telephony.TelephonyManager;
@@ -31,7 +32,7 @@ import android.widget.Toast;
 import java.util.Objects;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, HandshakeDialogFragment.HandshakeDialogListener {
     private SharedPreferences mSharedPreferences;
     private LocalBroadcastManager mBroadcastManager;
     private StatusNotificationReceiver mStatusNotificationReceiver;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     private Switch mServiceSwitch;
     private TextView mServiceText;
+    private DialogFragment mHandshakeDialog;
 
     private boolean mActivityVisible = false;
     private int mConnectionStatus = Constants.SERVICE.STATUS_STOPPED;
@@ -168,6 +170,13 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     private void openHandshakePrompt(String identifier) {
+        if (mHandshakeDialog != null) {
+            return;
+        }
+
+        mHandshakeDialog = new HandshakeDialogFragment(this, identifier);
+
+        mHandshakeDialog.show(getSupportFragmentManager(), "handshake_dialog");
     }
 
     private void sendHandshakeResponse(boolean allow, boolean remember, String identifier) {
@@ -287,6 +296,25 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         }
     }
 
+    @Override
+    public void onHandshakeDialogContinue(String identifier, boolean whitelist) {
+        mHandshakeDialog = null;
+
+        sendHandshakeResponse(true, whitelist, identifier);
+    }
+
+    @Override
+    public void onHandshakeDialogAbort() {
+        mHandshakeDialog = null;
+
+        sendHandshakeResponse(false, false, null);
+    }
+
+    @Override
+    public void onHandshakeDialogCancel() {
+        mHandshakeDialog = null;
+    }
+
     private class StatusNotificationReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -307,6 +335,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private class DismissHandshakePromptReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (mHandshakeDialog != null) {
+                mHandshakeDialog.dismiss();
+                mHandshakeDialog = null;
+            }
         }
     }
 
