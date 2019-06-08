@@ -35,8 +35,6 @@ public class MainFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        Objects.requireNonNull(getContext());
-
         getPreferenceManager().setSharedPreferencesName(Constants.PREFERENCES_NAME);
         getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
 
@@ -69,7 +67,7 @@ public class MainFragment extends PreferenceFragmentCompat {
                 return true;
             }
 
-            Toast.makeText(getContext(), R.string.invalid_server_address, Toast.LENGTH_LONG).show();
+            Toast.makeText(requireContext(), R.string.invalid_server_address, Toast.LENGTH_LONG).show();
             return false;
         });
 
@@ -99,7 +97,7 @@ public class MainFragment extends PreferenceFragmentCompat {
             String strVal = newValue.toString();
 
             if (TextUtils.isEmpty(strVal)) {
-                Toast.makeText(getContext(), R.string.invalid_server_port, Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), R.string.invalid_server_port, Toast.LENGTH_LONG).show();
                 return false;
             }
 
@@ -108,12 +106,12 @@ public class MainFragment extends PreferenceFragmentCompat {
             try {
                 intVal = Integer.parseInt(strVal);
             } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), R.string.invalid_server_port, Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), R.string.invalid_server_port, Toast.LENGTH_LONG).show();
                 return false;
             }
 
             if (intVal < 1 || intVal > 65535) {
-                Toast.makeText(getContext(), R.string.invalid_server_port, Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), R.string.invalid_server_port, Toast.LENGTH_LONG).show();
                 return false;
             }
 
@@ -133,7 +131,7 @@ public class MainFragment extends PreferenceFragmentCompat {
         featureNotifications.setOnPreferenceChangeListener((preference, newValue) -> {
             notificationsFilters.setEnabled((boolean)newValue);
 
-            if ((boolean)newValue && !MainActivity.isNotificationListenerEnabled(getContext())) {
+            if ((boolean)newValue && !MainActivity.isNotificationListenerEnabled(requireContext())) {
                 startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
             }
 
@@ -142,7 +140,7 @@ public class MainFragment extends PreferenceFragmentCompat {
 
         notificationsFilters.setEnabled(featureNotifications.isChecked());
 
-        TelephonyManager telephonyManager = (TelephonyManager)getContext().getSystemService(
+        TelephonyManager telephonyManager = (TelephonyManager)requireContext().getSystemService(
                 Context.TELEPHONY_SERVICE);
 
         SwitchPreference featureSMS = Objects.requireNonNull(findPreference("feature_sms"));
@@ -151,7 +149,7 @@ public class MainFragment extends PreferenceFragmentCompat {
             featureSMS.setDefaultValue(Constants.DEFAULT.FEATURE_SMS);
 
             featureSMS.setOnPreferenceChangeListener((preference, newValue) -> {
-                if ((boolean)newValue && !MainActivity.hasSMSPermissions(getContext())) {
+                if ((boolean)newValue && !MainActivity.hasSMSPermissions(requireContext())) {
                     requestPermissions(new String[] {
                             Manifest.permission.READ_SMS,
                             Manifest.permission.SEND_SMS,
@@ -198,7 +196,7 @@ public class MainFragment extends PreferenceFragmentCompat {
             String strVal = newValue.toString();
 
             if (TextUtils.isEmpty(strVal)) {
-                Toast.makeText(getContext(), R.string.invalid_device_name, Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), R.string.invalid_device_name, Toast.LENGTH_LONG).show();
                 return false;
             }
 
@@ -241,9 +239,7 @@ public class MainFragment extends PreferenceFragmentCompat {
     public void onResume() {
         super.onResume();
 
-        Objects.requireNonNull(getContext());
-
-        if (!MainActivity.isNotificationListenerEnabled(getContext())) {
+        if (!MainActivity.isNotificationListenerEnabled(requireContext())) {
             SwitchPreference featureNotifications = findPreference("feature_notifications");
 
             if (featureNotifications != null) {
@@ -251,7 +247,7 @@ public class MainFragment extends PreferenceFragmentCompat {
             }
         }
 
-        if (!MainActivity.hasSMSPermissions(getContext())) {
+        if (!MainActivity.hasSMSPermissions(requireContext())) {
             SwitchPreference featureSMS = findPreference("feature_sms");
 
             if (featureSMS != null) {

@@ -38,8 +38,6 @@ public class FiltersFragment extends PreferenceFragmentCompat implements SharedP
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        Objects.requireNonNull(getContext());
-
         getPreferenceManager().setSharedPreferencesName(Constants.PREFERENCES_NAME);
         getPreferenceManager().setSharedPreferencesMode(Context.MODE_PRIVATE);
 
@@ -51,9 +49,9 @@ public class FiltersFragment extends PreferenceFragmentCompat implements SharedP
                 "notifications_excluded_applications",
                 new HashSet<>()));
 
-        mPackageManager = getContext().getPackageManager();
+        mPackageManager = requireContext().getPackageManager();
 
-        mApplicationsList = listApplications(getContext());
+        mApplicationsList = listApplications(requireContext());
 
         mPreferenceContext = getPreferenceManager().getContext();
 
