@@ -50,6 +50,10 @@
     <string name="handshake_timeout">Handshake timed out</string>
     <string name="handshake_prompt_title">Identifier verification</string>
     <string name="handshake_prompt_text">Click here to verify the server identifier</string>
+    <string name="handshake_prompt_content">You are connecting to an unknown server.\n\nMake sure this identifier matches the one on the server.</string>
+    <string name="handshake_prompt_whitelist">Whitelist this server</string>
+    <string name="handshake_prompt_continue">Continue</string>
+    <string name="handshake_prompt_abort">Abort</string>
     <string name="handshake_not_verified">Server identifier not verified</string>
     <string name="connection_failed">Connection failed</string>
     <string name="connection_failed_retry">Connection failed, retrying…</string>
