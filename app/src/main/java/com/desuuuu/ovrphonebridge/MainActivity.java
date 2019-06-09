@@ -196,6 +196,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         super.onResume();
 
         mActivityVisible = true;
+
+        if (mServiceSwitch != null && mServiceText != null) {
+            updateLayout();
+        }
     }
 
     @Override
